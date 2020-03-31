@@ -1,5 +1,5 @@
 import numpy as np
-from typing import List
+from typing import List, Union
 
 
 def print_interval(a: float, b: float, iteration: int) -> None:
@@ -7,7 +7,7 @@ def print_interval(a: float, b: float, iteration: int) -> None:
 
 
 def bisect(a: float, b: float, function: str, stop_condition: str, min_accuracy: float, max_iterations: int = 1,
-           iteration: int = 1) -> List[List[float], float]:
+           iteration: int = 1) -> List[Union[List[float], float]]:
     intermediate_interval = [a, b]
     print_interval(a, b, iteration)
     l_range = b - a
@@ -35,7 +35,7 @@ def bisect(a: float, b: float, function: str, stop_condition: str, min_accuracy:
 
 
 def fibonacci(a: float, b: float, function: str, stop_condition: str, min_accuracy: float, max_iterations: int = 1,
-              iteration: int = 1) -> List[List[float], float]:
+              iteration: int = 1) -> List[Union[List[float], float]]:
     print_interval(a, b, iteration)
     intermediate_interval = [a, b]
 
