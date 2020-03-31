@@ -6,22 +6,22 @@ from matplotlib.widgets import TextBox, RadioButtons, Button
 # important for eval
 sin, cos, sqrt, tan = np.sin, np.cos, np.sqrt, np.tan
 
-function = "x ** 2"
-method = "Bisection"
-stop_condition = "Accuracy"
+function: str = "x ** 2"
+method: str = "Bisection"
+stop_condition: str = "Accuracy"
 fig, ax = plt.subplots()
 plt.subplots_adjust(left=0.35, top=0.95, bottom=0.05, right=0.95)
-x_min = -5.0
-x_max = 5.0
-x = np.arange(x_min, x_max, 0.01)
-s = x ** 2
+x_min: float = -5.0
+x_max: float = 5.0
+x: np.ndarray = np.arange(x_min, x_max, 0.01)
+s: np.ndarray = x ** 2
 l, = plt.plot(x, s, lw=2)
 
 max_iterations = 5
 min_accuracy = 0.01
 
 
-def update_plot():
+def update_plot() -> None:
     global x
     x = np.arange(x_min, x_max, 0.01)
     y_data = eval(function)
@@ -32,44 +32,46 @@ def update_plot():
     plt.draw()
 
 
-def change_range_min(min_range):
+def change_range_min(min_range) -> None:
     global x_min
     x_min = float(min_range)
     update_plot()
 
 
-def change_range_max(max_range):
+def change_range_max(max_range) -> None:
     global x_max
     x_max = float(max_range)
     update_plot()
 
 
-def change_function(text):
+def change_function(text: str) -> None:
     # TODO: safe input
     global function
     function = text
     update_plot()
 
 
-def change_method(text):
+def change_method(text: str) -> None:
     global method
     method = text
     print(method)
 
 
-def change_stop_condition(text):
+def change_stop_condition(text: str) -> None:
     global stop_condition
     stop_condition = text
     print(stop_condition)
 
 
-def on_submit(button_release_event):
+def on_submit(button_release_event) -> None:
     if method == "Bisection":
         print("Running Bisection on range: [" + str(x_min) + ", " + str(x_max) + "] and function: " + function)
-        print(bisect(x_min, x_max, function, stop_condition, min_accuracy, max_iterations))
+        results = bisect(x_min, x_max, function, stop_condition, min_accuracy, max_iterations)
+        print("Result: " + str(results.pop()) + "\nIntermediate intervals: " + str(results))
     else:
         print("Running Fibonacci on range: [" + str(x_min) + ", " + str(x_max) + "] and function: " + function)
-        print(fibonacci(x_min, x_max, function, stop_condition, min_accuracy, max_iterations))
+        results = fibonacci(x_min, x_max, function, stop_condition, min_accuracy, max_iterations)
+        print("Result: " + str(results.pop()) + "\nIntermediate intervals: " + str(results))
 
 
 input_function = plt.axes([0.05, 0.9, 0.2, 0.04])
