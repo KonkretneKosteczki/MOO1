@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import TextBox, RadioButtons
 
+# important for eval
+sin, cos, sqrt, tan = np.sin, np.cos, np.sqrt, np.tan
 
 function = "x ** 2"
 method = "Bisection"
@@ -39,14 +41,10 @@ def change_range_max(max_range):
 
 
 def change_function(text):
+    # TODO: safe input
     global function
     function = text
     update_plot()
-    # y_data = eval(text)
-    # # TODO: safe input
-    # l.set_ydata(y_data)
-    # ax.set_ylim(np.min(y_data), np.max(y_data))
-    # plt.draw()
 
 
 def change_method(text):
