@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.widgets import TextBox, RadioButtons
+from methods import bisect, fibonacci
+from matplotlib.widgets import TextBox, RadioButtons, Button
 
 # important for eval
 sin, cos, sqrt, tan = np.sin, np.cos, np.sqrt, np.tan
@@ -10,11 +11,14 @@ method = "Bisection"
 stop_condition = "Accuracy"
 fig, ax = plt.subplots()
 plt.subplots_adjust(left=0.35, top=0.95, bottom=0.05, right=0.95)
-x_min = 0
-x_max = 20
+x_min = -5.0
+x_max = 5.0
 x = np.arange(x_min, x_max, 0.01)
 s = x ** 2
 l, = plt.plot(x, s, lw=2)
+
+max_iterations = 5
+min_accuracy = 0.01
 
 
 def update_plot():
@@ -59,6 +63,13 @@ def change_stop_condition(text):
     print(stop_condition)
 
 
+def on_submit(button_release_event):
+    if method == "Bisection":
+        print(bisect(x_min, x_max, function, stop_condition, min_accuracy, max_iterations))
+    else:
+        print(fibonacci(x_min, x_max, function, stop_condition, min_accuracy, max_iterations))
+
+
 input_function = plt.axes([0.05, 0.9, 0.2, 0.04])
 input_function_text_box = TextBox(input_function, '', initial=function)
 input_function_text_box.on_submit(change_function)
@@ -83,6 +94,9 @@ x_max_text_box = TextBox(x_max_axs, '', initial=str(x_max))
 x_max_text_box.on_submit(change_range_max)
 plt.text(0.05, 1.25, "Max X", fontsize=12)
 
+submit_button_axs = plt.axes([0.05, 0.05, 0.2, 0.04])
+submit_button = Button(submit_button_axs, "Submit")
+submit_button.on_clicked(on_submit)
+
 update_plot()
 plt.show()
-
