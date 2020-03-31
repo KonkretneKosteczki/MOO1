@@ -1,8 +1,12 @@
 import numpy as np
 
 
+def print_interval(a, b, iteration):
+    print("INTERVAL nr" + str(iteration) + ": [" + str(a) + ", " + str(b) + "]")
+
+
 def bisect(a: float, b: float, function, stop_condition, min_accuracy, max_iterations=1, iteration=1):
-    print("STEP: a: " + str(a) + "b: " + str(b))
+    print_interval(a, b, iteration)
     l_range = b - a
     x1, xm, x2 = a + l_range / 4, (a + b) / 2, b - l_range / 4
     x = np.array([x1, xm, x2])  # for eval
@@ -24,4 +28,5 @@ def bisect(a: float, b: float, function, stop_condition, min_accuracy, max_itera
 
 
 def fibonacci(a: float, b: float, function, stop_condition, min_accuracy, max_iterations=1, iteration=1):
+    print_interval(a, b, iteration)
     pass

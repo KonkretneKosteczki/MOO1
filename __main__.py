@@ -65,8 +65,10 @@ def change_stop_condition(text):
 
 def on_submit(button_release_event):
     if method == "Bisection":
+        print("Running Bisection on range: [" + str(x_min) + ", " + str(x_max) + "] and function: " + function)
         print(bisect(x_min, x_max, function, stop_condition, min_accuracy, max_iterations))
     else:
+        print("Running Fibonacci on range: [" + str(x_min) + ", " + str(x_max) + "] and function: " + function)
         print(fibonacci(x_min, x_max, function, stop_condition, min_accuracy, max_iterations))
 
 
