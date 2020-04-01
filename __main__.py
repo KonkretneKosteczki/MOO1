@@ -45,6 +45,18 @@ def change_range_max(max_range) -> None:
     update_plot()
 
 
+def change_accuracy(accuracy) -> None:
+    global min_accuracy
+    min_accuracy = float(accuracy)
+    update_plot()
+
+
+def change_iterations(iterations) -> None:
+    global max_iterations
+    max_iterations = float(iterations)
+    update_plot()
+
+
 def change_function(text: str) -> None:
     # TODO: safe input
     global function
@@ -105,15 +117,25 @@ stop_condition_selection_radio = RadioButtons(stop_condition_selection, ("Accura
 stop_condition_selection_radio.on_clicked(change_stop_condition)
 plt.text(0.05, 0.8, "Stop condition", fontsize=12)
 
-x_min_axs = plt.axes([0.05, 0.25, 0.2, 0.04])
+x_min_axs = plt.axes([0.05, 0.25, 0.1, 0.04])
 x_min_text_box = TextBox(x_min_axs, '', initial=str(x_min))
 x_min_text_box.on_submit(change_range_min)
 plt.text(0.05, 1.25, "Min X", fontsize=12)
 
-x_max_axs = plt.axes([0.05, 0.15, 0.2, 0.04])
+x_max_axs = plt.axes([0.15, 0.25, 0.1, 0.04])
 x_max_text_box = TextBox(x_max_axs, '', initial=str(x_max))
 x_max_text_box.on_submit(change_range_max)
 plt.text(0.05, 1.25, "Max X", fontsize=12)
+
+accuracy_axs = plt.axes([0.05, 0.15, 0.1, 0.04])
+accuracy_text_box = TextBox(accuracy_axs, '', initial=str(min_accuracy))
+accuracy_text_box.on_submit(change_accuracy)
+plt.text(0.05, 1.25, "Acc", fontsize=12)
+
+iterations_axs = plt.axes([0.15, 0.15, 0.1, 0.04])
+iterations_text_box = TextBox(iterations_axs, '', initial=str(max_iterations))
+iterations_text_box.on_submit(change_iterations)
+plt.text(0.05, 1.25, "Iter", fontsize=12)
 
 submit_button_axs = plt.axes([0.05, 0.05, 0.2, 0.04])
 submit_button = Button(submit_button_axs, "Submit")
