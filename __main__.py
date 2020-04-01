@@ -15,14 +15,15 @@ x_min: float = -5.0
 x_max: float = 5.0
 x: np.ndarray = np.arange(x_min, x_max, 0.01)
 s: np.ndarray = x ** 2
-l, = plt.plot(x, s, lw=2)
-
+l, = ax.plot(x, s, lw=2)
+marked_regions = []
 max_iterations = 5
 min_accuracy = 0.01
 
 
 def update_plot() -> None:
     global x
+    clear_marked_regions()
     x = np.arange(x_min, x_max, 0.01)
     y_data = eval(function)
     l.set_xdata(x)
@@ -68,10 +69,26 @@ def on_submit(button_release_event) -> None:
         print("Running Bisection on range: [" + str(x_min) + ", " + str(x_max) + "] and function: " + function)
         results = bisect(x_min, x_max, function, stop_condition, min_accuracy, max_iterations)
         print("Result: " + str(results.pop()) + "\nIntermediate intervals: " + str(results))
+        mark_regions(results)
     else:
         print("Running Fibonacci on range: [" + str(x_min) + ", " + str(x_max) + "] and function: " + function)
         results = fibonacci(x_min, x_max, function, stop_condition, min_accuracy, max_iterations)
         print("Result: " + str(results.pop()) + "\nIntermediate intervals: " + str(results))
+
+
+def clear_marked_regions():
+    global marked_regions
+    for region in marked_regions:
+        region.remove()
+    marked_regions = []
+
+
+def mark_regions(intervals):
+    global marked_regions
+    clear_marked_regions()
+    for a, b in intervals:
+        marked_regions.append(ax.axvspan(a, b, color='blue', alpha=1/len(intervals)))
+    plt.draw()
 
 
 input_function = plt.axes([0.05, 0.9, 0.2, 0.04])

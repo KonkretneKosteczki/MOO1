@@ -1,5 +1,7 @@
 import numpy as np
 from typing import List, Union
+# important for eval
+sin, cos, sqrt, tan = np.sin, np.cos, np.sqrt, np.tan
 
 
 def print_interval(a: float, b: float, iteration: int) -> None:
