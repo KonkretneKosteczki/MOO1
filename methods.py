@@ -56,7 +56,7 @@ def acc_to_max_iter(l_range: float, min_accuracy: float) -> int:
 
 
 def fibonacci(a: float, b: float, l_range: float, function: str, stop_condition: str, min_accuracy: float,
-              max_iterations: int = 1, iteration: int = 2) -> List[Union[List[float], float]]:
+              max_iterations: int = 1, iteration: int = 2, f1:float = None, f2: float = None) -> List[Union[List[float], float]]:
     print_interval(a, b, iteration - 1)
     intermediate_interval = [a, b]
 
@@ -69,15 +69,22 @@ def fibonacci(a: float, b: float, l_range: float, function: str, stop_condition:
 
     l_star = l_range * (fib_num(max_iterations - iteration + 1) / fib_num(max_iterations + 1))
     x1, x2 = a + l_star, b - l_star
-    x = np.array([x1, x2])
-    f1, f2 = eval(function)
+
+    if f1 is None:
+        x=x1
+        f1=eval(function)
+    if f2 is None:
+        x=x2
+        f2=eval(function)
 
     if f1 > f2:
+        print("x1,b")
         return [intermediate_interval] + \
-               fibonacci(x1, b, l_range, function, stop_condition, min_accuracy, max_iterations, iteration + 1)
+               fibonacci(x1, b, l_range, function, stop_condition, min_accuracy, max_iterations, iteration + 1,f1=f2)
     else:
+        print("a,x2")
         return [intermediate_interval] + \
-               fibonacci(a, x2, l_range, function, stop_condition, min_accuracy, max_iterations, iteration + 1)
+               fibonacci(a, x2, l_range, function, stop_condition, min_accuracy, max_iterations, iteration + 1,f2=f1)
 
 
 def fib_num(n: int) -> int:

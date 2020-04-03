@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from methods import bisect, fibonacci
-from matplotlib.widgets import TextBox, RadioButtons, Button
+from matplotlib.widgets import TextBox, RadioButtons, Button, CheckButtons
 
 # important for eval
 sin, cos, sqrt, tan, ln, log10, log2 = np.sin, np.cos, np.sqrt, np.tan, np.log, np.log10, np.log2
@@ -17,8 +17,11 @@ x: np.ndarray = np.arange(x_min, x_max, 0.01)
 s: np.ndarray = x ** 2
 l, = ax.plot(x, s, lw=2)
 marked_regions = []
+lines = []
 max_iterations = 5
 min_accuracy = 0.01
+unimod_check= False
+unimod=10
 
 
 def update_plot() -> None:
@@ -67,22 +70,39 @@ def change_function(text: str) -> None:
     function = text
     update_plot()
 
+def change_unimod(text: str) -> None:
+    # TODO: safe input
+    global unimod
+    unimod = int(text)
+    clear_lines()
 
 def change_method(text: str) -> None:
     global method
     method = text
     print(method)
 
-
 def change_stop_condition(text: str) -> None:
     global stop_condition
     stop_condition = text
     print(stop_condition)
 
+def change_unimod_check(text: str) -> None:
+    global unimod_check
+    unimod_check = not unimod_check
+    print(unimod_check)
 
 def on_submit(button_release_event) -> None:
-    nx_min, nx_max = exhaustive_search_method(x_min, x_max, function)
-    print("MINMAX", nx_min,nx_max)
+    clear_lines()
+    if unimod_check:
+        try:
+            nx_min, nx_max = exhaustive_search_method(x_min, x_max, function, unimod)
+            lines.append(ax.axvline(nx_min, 0, 1, color='red'))
+            lines.append(ax.axvline(nx_max, 0, 1, color='red'))
+        except ValueError:
+            print(f"No minimum within the given range. The minimum is the endpoint: {min(x_min,x_max)}")
+    else:
+        nx_min, nx_max = x_min,x_max
+
     if method == "Bisection":
         print("Running Bisection on range: [" + str(nx_min) + ", " + str(nx_max) + "] and function: " + function)
         results = bisect(nx_min, nx_max, function, stop_condition, min_accuracy, max_iterations)
@@ -101,6 +121,11 @@ def clear_marked_regions():
         region.remove()
     marked_regions = []
 
+def clear_lines():
+    global lines
+    for line in lines:
+        line.remove()
+    lines = []
 
 def mark_regions(intervals):
     global marked_regions
@@ -108,7 +133,6 @@ def mark_regions(intervals):
     for a, b in intervals:
         marked_regions.append(ax.axvspan(a, b, color='blue', alpha=1/len(intervals)))
     plt.draw()
-
 
 def exhaustive_search_method(ua, ub, fun, n=10):
     ux1 = ua
@@ -127,8 +151,7 @@ def exhaustive_search_method(ua, ub, fun, n=10):
             if ux3 <= ub:
                 continue
             else:
-                return ua, ub
-
+                raise ValueError
 
 input_function = plt.axes([0.05, 0.9, 0.2, 0.04])
 input_function_text_box = TextBox(input_function, '', initial=function)
@@ -164,7 +187,16 @@ iterations_text_box = TextBox(iterations_axs, '', initial=str(max_iterations))
 iterations_text_box.on_submit(change_iterations)
 plt.text(0.05, 1.25, "Iter", fontsize=12)
 
-submit_button_axs = plt.axes([0.05, 0.05, 0.2, 0.04])
+unimod_axs1 = plt.axes([0.05, 0.06, 0.1, 0.05])
+unimod_checkbox = CheckButtons(unimod_axs1, ["Check"])
+unimod_checkbox.on_clicked(change_unimod_check)
+plt.text(0.05, 1.25, "Unimodality on n intervals", fontsize=8)
+
+unimod_axs2 = plt.axes([0.15, 0.06, 0.1, 0.05])
+unimod_text_box = TextBox(unimod_axs2, '', initial=str(unimod))
+unimod_text_box.on_submit(change_unimod)
+
+submit_button_axs = plt.axes([0.05, 0.01, 0.2, 0.04])
 submit_button = Button(submit_button_axs, "Submit")
 submit_button.on_clicked(on_submit)
 
