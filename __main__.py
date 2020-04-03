@@ -100,6 +100,7 @@ def on_submit(button_release_event) -> None:
             lines.append(ax.axvline(nx_max, 0, 1, color='red'))
         except ValueError:
             print(f"No minimum within the given range. The minimum is the endpoint: {min(x_min,x_max)}")
+            return
     else:
         nx_min, nx_max = x_min,x_max
 
