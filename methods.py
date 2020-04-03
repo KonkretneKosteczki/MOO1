@@ -15,13 +15,14 @@ def bisect(a: float, b: float, function: str, stop_condition: str, min_accuracy:
     print_interval(a, b, iteration)
     l_range = b - a
     x1, xm, x2 = a + l_range / 4, (a + b) / 2, b - l_range / 4
-    x = np.array([x1, xm, x2])  # for eval
-    f1, fm, f2 = eval(function)
 
     if stop_condition == "Iterations" and iteration > max_iterations:
         return [intermediate_interval, xm]  # we assume the extremum is the middle of the range
     if stop_condition == "Accuracy" and l_range <= 2 * min_accuracy:
         return [intermediate_interval, xm]
+
+    x = np.array([x1, xm, x2])  # for eval
+    f1, fm, f2 = eval(function)
 
     # lewy przedział
     if f1 < fm:
