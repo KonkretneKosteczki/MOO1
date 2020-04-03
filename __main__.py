@@ -31,6 +31,7 @@ def update_plot() -> None:
     #     x_min = 0.01
 
     clear_marked_regions()
+    clear_lines()
     x = np.arange(x_min, x_max, 0.01)
     y_data = eval(function)
     l.set_xdata(x)
@@ -92,7 +93,6 @@ def change_unimod_check(text: str) -> None:
     print(unimod_check)
 
 def on_submit(button_release_event) -> None:
-    clear_lines()
     if unimod_check:
         try:
             nx_min, nx_max = exhaustive_search_method(x_min, x_max, function, unimod)
@@ -144,6 +144,7 @@ def exhaustive_search_method(ua, ub, fun, n=10):
         x = np.array([ux1, ux2, ux3])  # for eval
         uf1, uf2, uf3 = eval(fun)
         if uf1 >= uf2 and uf2 <= uf3:
+            print(f"Found unimodality bounds: [{ux1},{ux3}]")
             return ux1, ux3
         else:
             ux1 = ux2
