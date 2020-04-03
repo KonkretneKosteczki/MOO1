@@ -61,7 +61,7 @@ def fibonacci(a: float, b: float, l_range: float, function: str, stop_condition:
                fibonacci(a, x2, l_range, function, stop_condition, min_accuracy, max_iterations, iteration + 1)
 
 
-def fib_num(n):
+def fib_num(n: int) -> int:
     if n < 0:
         raise ValueError
     elif n == 0:
@@ -70,7 +70,7 @@ def fib_num(n):
         return 1
     else:
         n1, n2 = 1, 1
-        non_recursive = 0
+        non_recursive: int = 0
         for i in range(n - 1):
             non_recursive = n1 + n2
             n1 = n2
