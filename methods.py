@@ -1,11 +1,12 @@
 import numpy as np
 from typing import List, Union
+
 # important for eval
 sin, cos, sqrt, tan = np.sin, np.cos, np.sqrt, np.tan
 
 
 def print_interval(a: float, b: float, iteration: int) -> None:
-    print("INTERVAL nr" + str(iteration) + ": [" + str(a) + ", " + str(b) + "]")
+    print(f"INTERVAL no {iteration}: [{a}, {b}]")
 
 
 def bisect(a: float, b: float, function: str, stop_condition: str, min_accuracy: float, max_iterations: int = 1,
@@ -33,12 +34,37 @@ def bisect(a: float, b: float, function: str, stop_condition: str, min_accuracy:
     # środkowy przedział
     else:
         return [intermediate_interval] + \
-           bisect(x1, x2, function, stop_condition, min_accuracy, max_iterations, iteration + 1)
+               bisect(x1, x2, function, stop_condition, min_accuracy, max_iterations, iteration + 1)
 
-
-def fibonacci(a: float, b: float, function: str, stop_condition: str, min_accuracy: float, max_iterations: int = 1,
-              iteration: int = 1) -> List[Union[List[float], float]]:
+def fibonacci(a: float, b: float, l_range:float, function: str, stop_condition: str, min_accuracy: float, max_iterations: int = 1,
+              iteration: int = 2) -> List[Union[List[float], float]]:
     print_interval(a, b, iteration)
     intermediate_interval = [a, b]
 
-    return [intermediate_interval]
+    if stop_condition == "Iterations" and iteration > max_iterations:
+        x0 = (a + b) / 2
+        return [intermediate_interval, x0]
+    elif stop_condition == "Accuracy":
+        raise NotImplementedError
+
+    l_star = l_range * (fib_num(max_iterations - iteration+1) / fib_num(max_iterations+1))
+    x1, x2 = a+l_star, b-l_star
+    x = np.array([x1, x2])
+    f1, f2 = eval(function)
+
+    if f1>f2:
+        return [intermediate_interval] + \
+               fibonacci(x1,b,l_range,function,stop_condition,min_accuracy,max_iterations,iteration+1)
+    else:
+        return [intermediate_interval] + \
+               fibonacci(a, x2, l_range, function, stop_condition, min_accuracy, max_iterations, iteration + 1)
+
+def fib_num(n):
+    if n < 0:
+        raise ValueError
+    elif n == 0:
+        return 1
+    elif n == 1:
+        return 1
+    else:
+        return fib_num(n - 1) + fib_num(n - 2)

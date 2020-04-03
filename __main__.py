@@ -84,9 +84,9 @@ def on_submit(button_release_event) -> None:
         mark_regions(results)
     else:
         print("Running Fibonacci on range: [" + str(x_min) + ", " + str(x_max) + "] and function: " + function)
-        results = fibonacci(x_min, x_max, function, stop_condition, min_accuracy, max_iterations)
+        results = fibonacci(x_min, x_max, x_max-x_min, function, stop_condition, min_accuracy, max_iterations)
         print("Result: " + str(results.pop()) + "\nIntermediate intervals: " + str(results))
-
+        mark_regions(results)
 
 def clear_marked_regions():
     global marked_regions
