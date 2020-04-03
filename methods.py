@@ -36,17 +36,27 @@ def bisect(a: float, b: float, function: str, stop_condition: str, min_accuracy:
         return [intermediate_interval] + \
                bisect(x1, x2, function, stop_condition, min_accuracy, max_iterations, iteration + 1)
 
+def acc_to_max_iter(l_range: float, min_accuracy:float) -> int:
+    i = 0
+    while True:
+        # when max_iterations == iteration then fib_num(max_iterations - iteration+1) = 1
+        l_star = l_range / fib_num(i+1)
+        if l_star <= min_accuracy:
+            return i
+        else:
+            i+=1
 
 def fibonacci(a: float, b: float, l_range: float, function: str, stop_condition: str, min_accuracy: float,
               max_iterations: int = 1, iteration: int = 2) -> List[Union[List[float], float]]:
-    print_interval(a, b, iteration)
+    print_interval(a, b, iteration-1)
     intermediate_interval = [a, b]
 
     if stop_condition == "Iterations" and iteration > max_iterations:
         x0 = (a + b) / 2
         return [intermediate_interval, x0]
     elif stop_condition == "Accuracy":
-        raise NotImplementedError
+        max_iterations = acc_to_max_iter(l_range, min_accuracy)
+        return fibonacci(a,b,l_range,function,"Iterations",min_accuracy,max_iterations)
 
     l_star = l_range * (fib_num(max_iterations - iteration+1) / fib_num(max_iterations+1))
     x1, x2 = a+l_star, b-l_star
