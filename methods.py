@@ -10,7 +10,7 @@ def print_interval(a: float, b: float, iteration: int) -> None:
 
 
 def bisect(a: float, b: float, function: str, stop_condition: str, min_accuracy: float, max_iterations: int = 1,
-           iteration: int = 1) -> List[Union[List[float], float]]:
+           iteration: int = 1, fm: float = None) -> List[Union[List[float], float]]:
     intermediate_interval = [a, b]
     print_interval(a, b, iteration)
     l_range = b - a
@@ -21,24 +21,30 @@ def bisect(a: float, b: float, function: str, stop_condition: str, min_accuracy:
     if stop_condition == "Accuracy" and l_range <= 2 * min_accuracy:
         return [intermediate_interval, xm]
 
-    x = np.array([x1, xm, x2])  # for eval
-    f1, fm, f2 = eval(function)
+    # first iteration also calculates fm
+    if fm is None:
+        x = np.array([x1, xm, x2])
+        f1, fm, f2 = eval(function)
+    # all other iterations get fm from the last one
+    else:
+        x = np.array([x1, x2])
+        f1, f2 = eval(function)
 
     # lewy przedział
     if f1 < fm:
         return [intermediate_interval] + \
-               bisect(a, xm, function, stop_condition, min_accuracy, max_iterations, iteration + 1)
+               bisect(a, xm, function, stop_condition, min_accuracy, max_iterations, iteration + 1, fm=f1)
     # prawy przedział
     elif f2 < fm:
         return [intermediate_interval] + \
-               bisect(xm, b, function, stop_condition, min_accuracy, max_iterations, iteration + 1)
+               bisect(xm, b, function, stop_condition, min_accuracy, max_iterations, iteration + 1, fm=f2)
     # środkowy przedział
     else:
         return [intermediate_interval] + \
-               bisect(x1, x2, function, stop_condition, min_accuracy, max_iterations, iteration + 1)
+               bisect(x1, x2, function, stop_condition, min_accuracy, max_iterations, iteration + 1, fm=fm)
 
 
-def acc_to_max_iter(l_range: float, min_accuracy:float) -> int:
+def acc_to_max_iter(l_range: float, min_accuracy: float) -> int:
     i = 0
     while True:
         # when max_iterations == iteration then fib_num(max_iterations - iteration+1) = 1
@@ -51,7 +57,7 @@ def acc_to_max_iter(l_range: float, min_accuracy:float) -> int:
 
 def fibonacci(a: float, b: float, l_range: float, function: str, stop_condition: str, min_accuracy: float,
               max_iterations: int = 1, iteration: int = 2) -> List[Union[List[float], float]]:
-    print_interval(a, b, iteration-1)
+    print_interval(a, b, iteration - 1)
     intermediate_interval = [a, b]
 
     if stop_condition == "Iterations" and iteration > max_iterations:
@@ -59,10 +65,10 @@ def fibonacci(a: float, b: float, l_range: float, function: str, stop_condition:
         return [intermediate_interval, x0]
     elif stop_condition == "Accuracy":
         max_iterations = acc_to_max_iter(l_range, min_accuracy)
-        return fibonacci(a,b,l_range,function,"Iterations",min_accuracy,max_iterations)
+        return fibonacci(a, b, l_range, function, "Iterations", min_accuracy, max_iterations)
 
-    l_star = l_range * (fib_num(max_iterations - iteration+1) / fib_num(max_iterations+1))
-    x1, x2 = a+l_star, b-l_star
+    l_star = l_range * (fib_num(max_iterations - iteration + 1) / fib_num(max_iterations + 1))
+    x1, x2 = a + l_star, b - l_star
     x = np.array([x1, x2])
     f1, f2 = eval(function)
 
