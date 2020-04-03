@@ -2,7 +2,7 @@ import numpy as np
 from typing import List, Union
 
 # important for eval
-sin, cos, sqrt, tan = np.sin, np.cos, np.sqrt, np.tan
+sin, cos, sqrt, tan, ln, log10, log2 = np.sin, np.cos, np.sqrt, np.tan, np.log, np.log10, np.log2
 
 
 def print_interval(a: float, b: float, iteration: int) -> None:
@@ -37,15 +37,17 @@ def bisect(a: float, b: float, function: str, stop_condition: str, min_accuracy:
         return [intermediate_interval] + \
                bisect(x1, x2, function, stop_condition, min_accuracy, max_iterations, iteration + 1)
 
+
 def acc_to_max_iter(l_range: float, min_accuracy:float) -> int:
     i = 0
     while True:
         # when max_iterations == iteration then fib_num(max_iterations - iteration+1) = 1
-        l_star = l_range / fib_num(i+1)
+        l_star = l_range / fib_num(i + 1)
         if l_star <= min_accuracy:
             return i
         else:
-            i+=1
+            i += 1
+
 
 def fibonacci(a: float, b: float, l_range: float, function: str, stop_condition: str, min_accuracy: float,
               max_iterations: int = 1, iteration: int = 2) -> List[Union[List[float], float]]:

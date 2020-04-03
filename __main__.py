@@ -4,7 +4,7 @@ from methods import bisect, fibonacci
 from matplotlib.widgets import TextBox, RadioButtons, Button
 
 # important for eval
-sin, cos, sqrt, tan = np.sin, np.cos, np.sqrt, np.tan
+sin, cos, sqrt, tan, ln, log10, log2 = np.sin, np.cos, np.sqrt, np.tan, np.log, np.log10, np.log2
 
 function: str = "x ** 2"
 method: str = "Bisection"
@@ -22,7 +22,11 @@ min_accuracy = 0.01
 
 
 def update_plot() -> None:
-    global x
+    global x, x_min
+
+    # if ("log" in function or "ln" in function) and x_min <= 0:
+    #     x_min = 0.01
+
     clear_marked_regions()
     x = np.arange(x_min, x_max, 0.01)
     y_data = eval(function)
@@ -90,6 +94,7 @@ def on_submit(button_release_event) -> None:
         print("Result: " + str(results.pop()) + "\nIntermediate intervals: " + str(results))
         mark_regions(results)
 
+
 def clear_marked_regions():
     global marked_regions
     for region in marked_regions:
@@ -104,24 +109,26 @@ def mark_regions(intervals):
         marked_regions.append(ax.axvspan(a, b, color='blue', alpha=1/len(intervals)))
     plt.draw()
 
-def exhaustive_search_method(ua,ub, function, n=10):
+
+def exhaustive_search_method(ua, ub, fun, n=10):
     ux1 = ua
-    dx = (ub-ua)/n
-    ux2 = ux1+dx
-    ux3 = ux2+dx
+    dx = (ub - ua) / n
+    ux2 = ux1 + dx
+    ux3 = ux2 + dx
     while True:
         x = np.array([ux1, ux2, ux3])  # for eval
-        uf1, uf2, uf3 = eval(function)
-        if uf1>=uf2 and uf2<=uf3:
-            return ux1,ux3
+        uf1, uf2, uf3 = eval(fun)
+        if uf1 >= uf2 and uf2 <= uf3:
+            return ux1, ux3
         else:
-            ux1=ux2
-            ux2=ux3
-            ux3=ux2+dx
-            if ux3<=ub:
+            ux1 = ux2
+            ux2 = ux3
+            ux3 = ux2 + dx
+            if ux3 <= ub:
                 continue
             else:
-                return ua,ub
+                return ua, ub
+
 
 input_function = plt.axes([0.05, 0.9, 0.2, 0.04])
 input_function_text_box = TextBox(input_function, '', initial=function)
