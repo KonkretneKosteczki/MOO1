@@ -36,8 +36,9 @@ def bisect(a: float, b: float, function: str, stop_condition: str, min_accuracy:
         return [intermediate_interval] + \
                bisect(x1, x2, function, stop_condition, min_accuracy, max_iterations, iteration + 1)
 
-def fibonacci(a: float, b: float, l_range:float, function: str, stop_condition: str, min_accuracy: float, max_iterations: int = 1,
-              iteration: int = 2) -> List[Union[List[float], float]]:
+
+def fibonacci(a: float, b: float, l_range: float, function: str, stop_condition: str, min_accuracy: float,
+              max_iterations: int = 1, iteration: int = 2) -> List[Union[List[float], float]]:
     print_interval(a, b, iteration)
     intermediate_interval = [a, b]
 
@@ -52,12 +53,13 @@ def fibonacci(a: float, b: float, l_range:float, function: str, stop_condition: 
     x = np.array([x1, x2])
     f1, f2 = eval(function)
 
-    if f1>f2:
+    if f1 > f2:
         return [intermediate_interval] + \
-               fibonacci(x1,b,l_range,function,stop_condition,min_accuracy,max_iterations,iteration+1)
+               fibonacci(x1, b, l_range, function, stop_condition, min_accuracy, max_iterations, iteration + 1)
     else:
         return [intermediate_interval] + \
                fibonacci(a, x2, l_range, function, stop_condition, min_accuracy, max_iterations, iteration + 1)
+
 
 def fib_num(n):
     if n < 0:
@@ -67,4 +69,11 @@ def fib_num(n):
     elif n == 1:
         return 1
     else:
-        return fib_num(n - 1) + fib_num(n - 2)
+        n1, n2 = 1, 1
+        non_recursive = 0
+        for i in range(n - 1):
+            non_recursive = n1 + n2
+            n1 = n2
+            n2 = non_recursive
+        return non_recursive
+        # return fib_num(n - 1) + fib_num(n - 2)
