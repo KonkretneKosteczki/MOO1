@@ -53,7 +53,7 @@ def change_accuracy(accuracy) -> None:
 
 def change_iterations(iterations) -> None:
     global max_iterations
-    max_iterations = float(iterations)
+    max_iterations = int(iterations)
     update_plot()
 
 
@@ -77,14 +77,16 @@ def change_stop_condition(text: str) -> None:
 
 
 def on_submit(button_release_event) -> None:
+    nx_min, nx_max = exhaustive_search_method(x_min, x_max, function)
+    print("MINMAX", nx_min,nx_max)
     if method == "Bisection":
-        print("Running Bisection on range: [" + str(x_min) + ", " + str(x_max) + "] and function: " + function)
-        results = bisect(x_min, x_max, function, stop_condition, min_accuracy, max_iterations)
+        print("Running Bisection on range: [" + str(nx_min) + ", " + str(nx_max) + "] and function: " + function)
+        results = bisect(nx_min, nx_max, function, stop_condition, min_accuracy, max_iterations)
         print("Result: " + str(results.pop()) + "\nIntermediate intervals: " + str(results))
         mark_regions(results)
     else:
-        print("Running Fibonacci on range: [" + str(x_min) + ", " + str(x_max) + "] and function: " + function)
-        results = fibonacci(x_min, x_max, x_max-x_min, function, stop_condition, min_accuracy, max_iterations)
+        print("Running Fibonacci on range: [" + str(nx_min) + ", " + str(nx_max) + "] and function: " + function)
+        results = fibonacci(nx_min, nx_max, nx_max-nx_min, function, stop_condition, min_accuracy, max_iterations+1)
         print("Result: " + str(results.pop()) + "\nIntermediate intervals: " + str(results))
         mark_regions(results)
 
@@ -102,6 +104,24 @@ def mark_regions(intervals):
         marked_regions.append(ax.axvspan(a, b, color='blue', alpha=1/len(intervals)))
     plt.draw()
 
+def exhaustive_search_method(ua,ub, function, n=10):
+    ux1 = ua
+    dx = (ub-ua)/n
+    ux2 = ux1+dx
+    ux3 = ux2+dx
+    while True:
+        x = np.array([ux1, ux2, ux3])  # for eval
+        uf1, uf2, uf3 = eval(function)
+        if uf1>=uf2 and uf2<=uf3:
+            return ux1,ux3
+        else:
+            ux1=ux2
+            ux2=ux3
+            ux3=ux2+dx
+            if ux3<=ub:
+                continue
+            else:
+                return ua,ub
 
 input_function = plt.axes([0.05, 0.9, 0.2, 0.04])
 input_function_text_box = TextBox(input_function, '', initial=function)
