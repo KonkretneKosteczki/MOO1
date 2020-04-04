@@ -26,7 +26,7 @@ unimod=10
 
 def update_plot() -> None:
     global x, x_min
-
+    clear_lines()
     # if ("log" in function or "ln" in function) and x_min <= 0:
     #     x_min = 0.01
 
@@ -136,6 +136,7 @@ def mark_regions(intervals):
     plt.draw()
 
 def exhaustive_search_method(ua, ub, fun, n=10):
+    clear_lines()
     ux1 = ua
     dx = (ub - ua) / n
     ux2 = ux1 + dx
